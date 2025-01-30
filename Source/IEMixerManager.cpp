@@ -34,29 +34,33 @@ IEMixer& IEMixerManager::GetIEMixer(const char* CardName)
     {
         snd_mixer_t* MixerHandle = nullptr;
         snd_mixer_open(&MixerHandle, 0);
-        snd_mixer_attach(MixerHandle, CardName);
-        snd_mixer_selem_register(MixerHandle, nullptr, nullptr);
-        if (snd_mixer_load(MixerHandle) == 0)
+        if (snd_mixer_attach(MixerHandle, CardName) == 0)
         {
-            
-            // snd_mixer_set_callback(MixerHandle,
-            //     [&](snd_mixer_t* _MixerHandle,
-            //         unsigned int Mask,
-			// 	    snd_mixer_elem_t* MixerElement)
-            //     {
-            //         if (Mask & SND_CTL_EVENT_LAST)
-            //         {
-            //             m_MixerMap.erase(CardName);
-            //         }
-            //         return 0;
-            //     });
+            snd_mixer_selem_register(MixerHandle, nullptr, nullptr);
+            if (snd_mixer_load(MixerHandle) == 0)
+            {
 
-            
-            IEMixer& NewMixer = m_MixerMap.emplace(CardName, MixerHandle).first->second;
-            m_PollingThreads.push_back(std::thread(&IEMixer::PollingFunction, &NewMixer));
-            return NewMixer;
+                // snd_mixer_set_callback(MixerHandle,
+                //     [&](snd_mixer_t* _MixerHandle,
+                //         unsigned int Mask,
+                // 	    snd_mixer_elem_t* MixerElement)
+                //     {
+                //         if (Mask & SND_CTL_EVENT_LAST)
+                //         {
+                //             m_MixerMap.erase(CardName);
+                //         }
+                //         return 0;
+                //     });
+
+
+                IEMixer& NewMixer = m_MixerMap.emplace(CardName, MixerHandle).first->second;
+                m_PollingThreads.push_back(std::thread(&IEMixer::PollingFunction, &NewMixer));
+                return NewMixer;
+            }
         }
     }
+    const std::string ErrorMsg = std::format("{} mixer not found", CardName);
+    throw std::runtime_error(ErrorMsg);
 }
 
 

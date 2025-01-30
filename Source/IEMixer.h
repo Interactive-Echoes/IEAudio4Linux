@@ -4,7 +4,9 @@
 
 #pragma once
 
+#include <format>
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 #include "alsa/asoundlib.h"

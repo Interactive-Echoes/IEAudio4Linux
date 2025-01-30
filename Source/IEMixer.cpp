@@ -22,6 +22,8 @@ IEMixerElement& IEMixer::GetElement(const char* ElementName)
             return m_MixerElementMap.emplace(ElementName, MixerElementHandle).first->second;
         }
     }
+    const std::string ErrorMsg = std::format("{} mixer element not found", ElementName);
+    throw std::runtime_error(ErrorMsg);
 }
 
 void IEMixer::PollingFunction() const
