@@ -1,7 +1,8 @@
-#include "IEMixerElement.h"
 // SPDX-License-Identifier: GPL-2.0-only
 // Copyright © Interactive Echoes. All rights reserved.
 // Author: mozahzah
+
+#include "IEMixerElement.h"
 
 std::optional<float> IEMixerElement::GetVolume() const
 {
