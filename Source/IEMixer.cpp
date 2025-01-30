@@ -33,6 +33,7 @@ void IEMixer::PollingFunction() const
             snd_mixer_wait(Handle, -1);
             for (const IEMixerElementMap::value_type& Element : m_MixerElementMap)
             {
+                // TODO GET EVENT TYPE: Maybe Cache Previous Values?
                 for (const IEMixerElement::IEMixerElementCallbackMap::value_type& Callback : Element.second.GetRegisteredCallbacks())
                 {
                     Callback.second.first(Callback.second.second);
