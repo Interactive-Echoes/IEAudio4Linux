@@ -5,9 +5,9 @@
 #pragma once
 
 #include <format>
-#include <memory>
 #include <stdexcept>
 #include <string>
+#include <thread>
 
 #include "alsa/asoundlib.h"
 
@@ -19,16 +19,20 @@ public:
     using IEMixerElementMap = std::unordered_map<std::string, IEMixerElement>;
 
 public:
-    IEMixer(snd_mixer_t* MixerHandle = nullptr) :
-        m_Handle(MixerHandle, [](snd_mixer_t* MixerHandle) { if (MixerHandle) snd_mixer_close(MixerHandle); })
-    {}
-    ~IEMixer() = default;
+    IEMixer(snd_mixer_t* MixerHandle = nullptr);
+    ~IEMixer();
 
 public:
     IEMixerElement& GetElement(const char* ElementName);
-    void PollingFunction() const;
 
 private:
-    const std::shared_ptr<snd_mixer_t> m_Handle;
+    void PollingFunction();
+
+private:
     IEMixerElementMap m_MixerElementMap;
+    std::mutex m_MixerElementMapCriticalSection;
+
+    const std::shared_ptr<snd_mixer_t> m_Handle;
+    
+    std::thread m_PollingThread;
 };
