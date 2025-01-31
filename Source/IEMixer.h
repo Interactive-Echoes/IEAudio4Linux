@@ -10,6 +10,7 @@
 #include <thread>
 
 #include "alsa/asoundlib.h"
+#include "pthread.h"
 
 #include "IEMixerElement.h"
 

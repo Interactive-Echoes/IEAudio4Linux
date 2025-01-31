@@ -44,6 +44,7 @@ IEMixerElement& IEMixer::GetElement(const char* ElementName)
 
 void IEMixer::PollingFunction()
 {
+    pthread_setname_np(pthread_self(), "IEAudio4Linux");
     while (true)
     {
         if (snd_mixer_t* const Handle = m_Handle.get())
