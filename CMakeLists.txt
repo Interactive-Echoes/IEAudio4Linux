@@ -43,3 +43,5 @@ install(TARGETS ${PROJECT_NAME}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 include(InstallRequiredSystemLibraries)
+
+message("------------------------------------------------------------\n")
