@@ -21,15 +21,25 @@ message("System name: ${CMAKE_SYSTEM_NAME}")
 message("System version: ${CMAKE_SYSTEM_VERSION}")
 message("System processor: ${CMAKE_SYSTEM_PROCESSOR}")
 
+message("Gathering source files and creating Library")
 file(GLOB IEAudio4Linux_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp")
 add_library(${PROJECT_NAME} SHARED ${IEAudio4Linux_SOURCE_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC ".")
-file(GLOB IEAudio4Linux_HEADER_FILES "./*.h")
+file(GLOB IEAudio4Linux_HEADER_FILES "IEAudio4Linux.h")
 set_property(TARGET ${PROJECT_NAME} PROPERTY PUBLIC_HEADER ${IEAudio4Linux_HEADER_FILES})
 
+message("Linking ALSA")
 find_package(ALSA REQUIRED)
 if(ALSA_FOUND OR ALSA)
   target_link_libraries(${PROJECT_NAME} PUBLIC ${ALSA_LIBRARIES})
   target_include_directories(${PROJECT_NAME} PUBLIC ${ALSA_INCLUDE_DIRS})
   set(CMAKE_C_FLAGS ${ALSA_CFLAGS})
 endif()
+
+message("Setting up install")
+install(TARGETS ${PROJECT_NAME}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+include(InstallRequiredSystemLibraries)
