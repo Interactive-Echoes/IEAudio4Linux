@@ -47,6 +47,9 @@ public:
     void OnMixerEvent();
 
 private:
+    [[nodiscard]] uint32_t GenerateCallbackID() const;
+
+private:
     IEMixerElementCallbackMap m_RegisteredCallbacks;
     std::unordered_map<uint8_t, std::vector<uint32_t>> m_CallbackTypeLookupMap;
     std::mutex m_MixerElementCallbackMapCriticalSection;

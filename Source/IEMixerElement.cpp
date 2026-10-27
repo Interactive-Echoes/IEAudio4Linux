@@ -65,7 +65,7 @@ uint32_t IEMixerElement::RegisterCallback(const IEMixerElementCallback& Func, ui
 {
     std::scoped_lock Lock(m_MixerElementCallbackMapCriticalSection);
 
-    const uint32_t CallbackID = std::rand();
+    const uint32_t CallbackID = GenerateCallbackID();
     m_RegisteredCallbacks.emplace(CallbackID, std::make_pair(Func, UserData));
 
     for (IEMixerElementCallbackType Bit = IEMixerElementCallbackType::None;
@@ -120,4 +120,16 @@ void IEMixerElement::OnMixerEvent()
         }
         m_CachedVolume = CurrentVolume;
     }
+}
+
+uint32_t IEMixerElement::GenerateCallbackID() const
+{
+    static uint32_t CallbackID = 1;
+
+    /* We dont want to return an ID of 0 */
+    if (CallbackID == -1)
+    {
+        CallbackID = 1;
+    }
+    return CallbackID++;
 }
